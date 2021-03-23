@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用 jwt 登录页面</title>
+</head>
+<body>
+<div>
+    <input type="text" id="userName" name="userName" value="" placeholder="username">
+</div>
+<div>
+    <input type="password" id="password" name="password" value="" placeholder="password">
+</div>
+<div>
+    <input type="button" id="btnSave" onclick="go_login()"  value="登录">
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.js"></script>
+<script>
+        //登录
+        function go_login() {
+            var username=$("#userName").val();
+            var password=$("#password").val();
+            if ($("#userName").val() == "") {
+                alert('userName is empty');
+                $("#userName").focus();
+                return false;
+            }
+            if ($("#password").val() == "") {
+                alert('password is empty');
+                $("#password").focus();
+                return false;
+            }
+            var postData = {
+                "username":username ,
+                "password" : password
+            }
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/auth/authenticate",
+                contentType: "application/json;charset=UTF-8",
+                data:JSON.stringify(postData),
+                dataType: "json",
+                async: false,
+                error: function (request) {
+                    console.log("Connection error");
+                },
+                success: function (data) {
+                    //save token
+                    console.log("data:");
+                    console.log(data);
+                    if (data.code == 0) {
+                        //success
+                        alert("success:"+data.msg+";token:"+data.data.token);
+                        //save token
+                        localStorage.setItem("token",data.data.token);
+                    } else {
+                        //failed
+                        alert("failed:"+data.msg);
+                    }
+                }
+            });
+        };
+</script>
+</body>
+</html>

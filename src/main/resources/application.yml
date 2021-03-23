@@ -1,0 +1,41 @@
+#error
+server:
+  error:
+    include-stacktrace: always
+#error
+logging:
+  level:
+    org:
+      springframework:
+        web: trace
+#thymeleaf
+spring:
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+#mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/security?characterEncoding=utf8&useSSL=false
+    username: root
+    password: lhddemo
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#redis1
+  redis1:
+    enabled: 1
+    host: 127.0.0.1
+    port: 6379
+    password: lhddemo
+    database: 0
+    lettuce:
+      pool:
+        max-active: 32
+        max-wait: 300
+        max-idle: 16
+        min-idle: 8
+#mybatis
+mybatis:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.example.demo.mapper

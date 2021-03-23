@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试使用token登录</title>
+</head>
+<body>
+<div>
+    <input type="button" id="get_session"  value="get session info" onclick="getsession()" />
+    <br/>
+    <br/>
+    <input type="button" id="get_admin"  value="get admin info" onclick="getadmin()" />
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.js"></script>
+<script>
+
+      //得到admin的信息
+   function getadmin() {
+          alert('开始查询admin信息');
+          var token = localStorage.getItem("token");
+          //alert(token);
+          if (token == undefined) {
+              token = "";
+          }
+          var authToken = "Bearer "+token;
+          var url_param = "";
+          $.ajax({
+              cache: true,
+              type: "GET",
+              url: "/admin/hello/?"+url_param,
+              data:{},
+              dataType: "json",
+              async: true,
+              beforeSend: function(request) {
+                  request.setRequestHeader("Authorization", authToken); // 添加  CSRF Token
+              },
+              error: function (request) {
+                  alert("connect error");
+                  console.log("Connection error");
+              },
+              success: function (data) {
+                  if (data.code == "0") {
+                      alert("success:"+data.data.tip);
+                  } else {
+                      alert("failed:"+data.msg);
+                  }
+              }
+          });
+      }
+
+       //得到session信息
+       function getsession() {
+           alert('开始查询session信息');
+           var token = localStorage.getItem("token");
+           //alert(token);
+           if (token == undefined) {
+               alert('token 当前为空，请先登录');
+               return false;
+           }
+           var authToken = "Bearer "+token;
+           var url_param = "";
+           $.ajax({
+               cache: true,
+               type: "GET",
+               url: "/home/session/?"+url_param,
+               data:{},
+               dataType: "json",
+               async: true,
+               beforeSend: function(request) {
+                   request.setRequestHeader("Authorization", authToken); // 添加  CSRF Token
+               },
+               error: function (request) {
+                   alert("connect error");
+                   console.log("Connection error");
+               },
+               success: function (data) {
+                   if (data.code == "0") {
+                       alert("success: 昵称:"+data.data.nickname+";角色:"+data.data.roles);
+                   } else {
+                       alert("failed:"+data.msg);
+                   }
+               }
+           });
+       }
+</script>
+</body>
+</html>

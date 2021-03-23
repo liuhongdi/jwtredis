@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwtredis.demo.mapper.UserMapper">
+    <resultMap id="userMap" type="com.jwtredis.demo.pojo.SysUser">
+        <id property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
+        <result property="password" column="password"/>
+        <result property="nickName" column="nickName"/>
+        <collection property="roles" ofType="string">
+            <result column="roleName" property="roleName"/>
+        </collection>
+    </resultMap>
+    <select id="selectOneUserByUserName" parameterType="String" resultMap="userMap">
+		select u.*
+		,sru.roleName
+		from sys_user u
+        LEFT JOIN sys_user_role sru on u.userId= sru.userId
+        where userName= #{userName}
+	</select>
+</mapper>
